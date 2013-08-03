@@ -1,0 +1,14 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinterested</title>
+    <link rel="stylesheet" href="{% static 'css/pure-min.css' %}">
+</head>
+<body>
+    {% include 'layouts/navbar.html' %}
+    <br><br><br>
+    {% block page_content %}{% endblock %}
+</body>
+</html>

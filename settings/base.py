@@ -154,6 +154,8 @@ DEFAULT_APPS = (
 
 PROJECT_APPS = (
     "pinterested.data_collector",
+    "pinterested.login",
+    "pinterested.sorter"
 )
 
 THIRD_PARTY_APPS = (

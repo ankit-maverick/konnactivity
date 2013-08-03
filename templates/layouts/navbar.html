@@ -1,0 +1,11 @@
+<div class="header">
+    <div class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal" style="padding: 0.5em">
+        <a href="/" class="pure-menu-heading">Pinterested</a>
+        <ul style="float:right; padding-right: 20px">
+            {% if user.is_authenticated %}
+            {% else %}
+            <li><a href="#">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

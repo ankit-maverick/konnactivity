@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/pure-min.css' %}">
+<div class="pure-g-r">
+    <div class="pure-u-1-5">&nbsp;</div>
+    <div class="pure-u-3-5" style="text-align: center">
+        <h1 style="font-weight: 100">Please enter your Quora profile link</h1>
+        <br><br>
+        <form action="#" class="pure-form">
+            <input type="url" class="pure-input-1-2" id="quora" required pattern="^http[s]?://www.quora.com/[a-zA-Z0-9-]+" title="Quora Profile Link">
+            <br><br>
+            <button type="submit" class="pure-button pure-input-1-2 pure-button-primary" id="quora-btn">Go!</button>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script>
+function getQueryVariable(q, variable) {
+    var query = q;
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
+
+$("#quora-btn").click(function(){
+    $(this).html("Loading....").attr("disabled", "disabled");
+var access_token = getQueryVariable( String.replace(window.location.hash, "#", ""), "access_token");
+var FB_response = "";
+var quora_response = "";
+$.ajax({
+    url: "https://graph.facebook.com/me?access_token=" + access_token,
+    dataType: "text",
+    success: function(msg) {
+        FB_response = msg;
+
+            $.ajax({
+                url: "/finalize",
+                type: "POST",
+                data: {fb: FB_response, token: access_token, csrfmiddlewaretoken: '{{ csrf_token }}', quora: $("#quora").val()},
+                success: function(msg) {
+                    document.location = "/"
+                }
+            });
+        }
+    });
+});
+</script>

@@ -1,7 +1,6 @@
 # Create your views here.
 import urllib2
 from BeautifulSoup import BeautifulSoup
-from pinterested.settings import FB_ACCESS_TOKEN
 import json
 
 def QuoraParser(quora_username):
@@ -45,8 +44,8 @@ def QuoraParser(quora_username):
     }
 
 
-def FBParser(fb_username_or_id):
-    url = "https://graph.facebook.com/" + fb_username_or_id + "?fields=id,name,username,likes.limit(10000),location,age_range&access_token=" + FB_ACCESS_TOKEN
+def FBParser(fb_username_or_id, access_token):
+    url = "https://graph.facebook.com/" + fb_username_or_id + "?fields=id,name,username,likes.limit(10000),location,age_range,gender&access_token=" + access_token
 
     browser = urllib2.urlopen(url)
     return json.loads(browser.read())
