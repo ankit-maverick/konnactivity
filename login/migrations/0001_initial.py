@@ -49,14 +49,16 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'login', ['Userdata'])
 
-        # Adding M2M table for field interests on 'Userdata'
-        m2m_table_name = db.shorten_name(u'login_userdata_interests')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('userdata', models.ForeignKey(orm[u'login.userdata'], null=False)),
-            ('interest', models.ForeignKey(orm[u'login.interest'], null=False))
+        # Adding model 'UserInterest'
+        db.create_table(u'login_userinterest', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('interest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['login.Interest'])),
+            ('userdata', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['login.Userdata'])),
+            ('weight', self.gf('django.db.models.fields.IntegerField')(default=1)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
-        db.create_unique(m2m_table_name, ['userdata_id', 'interest_id'])
+        db.send_create_signal(u'login', ['UserInterest'])
 
 
     def backwards(self, orm):
@@ -72,8 +74,8 @@ class Migration(SchemaMigration):
         # Deleting model 'Userdata'
         db.delete_table(u'login_userdata')
 
-        # Removing M2M table for field interests on 'Userdata'
-        db.delete_table(db.shorten_name(u'login_userdata_interests'))
+        # Deleting model 'UserInterest'
+        db.delete_table(u'login_userinterest')
 
 
     models = {
@@ -141,11 +143,20 @@ class Migration(SchemaMigration):
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'gender': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'interests': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['login.Interest']", 'symmetrical': 'False'}),
+            'interests': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['login.Interest']", 'through': u"orm['login.UserInterest']", 'symmetrical': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'quora_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+        },
+        u'login.userinterest': {
+            'Meta': {'object_name': 'UserInterest'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'interest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['login.Interest']"}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'userdata': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['login.Userdata']"}),
+            'weight': ('django.db.models.fields.IntegerField', [], {'default': '1'})
         }
     }
 

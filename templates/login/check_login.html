@@ -17,8 +17,8 @@ function getQueryVariable(q, variable) {
     }
     return False;
 }
-
-var access_token = getQueryVariable( String.replace(window.location.hash, "#", ""), "access_token");
+var hash = window.location.hash;
+var access_token = getQueryVariable( hash.replace("#", ""), "access_token");
 if(access_token == false){
     document.location = "/login/error";
 }

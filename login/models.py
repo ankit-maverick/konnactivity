@@ -71,7 +71,7 @@ class Userdata(models.Model):
     city = models.ForeignKey(City)
     age = models.ForeignKey(AgeRange)
 
-    interests = models.ManyToManyField(Interest)
+    interests = models.ManyToManyField(Interest, through="UserInterest")
 
     created_at          = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at          = models.DateTimeField(auto_now=True, editable=False)
@@ -99,6 +99,17 @@ class Userdata(models.Model):
 
         saved_interests = Interest.bulk_get_or_create(interests)
 
-        t = [userdata.interests.add(s) for s in saved_interests]
+        activities = [UserInterest(userdata=userdata, interest=s) for s in saved_interests]
+
+        UserInterest.objects.bulk_create(activities)
 
         return user
+
+class UserInterest(models.Model):
+    interest = models.ForeignKey(Interest)
+    userdata = models.ForeignKey(Userdata)
+
+    weight = models.IntegerField(default=1)
+
+    created_at          = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at          = models.DateTimeField(auto_now=True, editable=False)
