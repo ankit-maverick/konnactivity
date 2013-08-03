@@ -46,7 +46,7 @@ def QuoraParser(quora_username):
 
 
 def FBParser(fb_username_or_id):
-    url = "https://graph.facebook.com/" + fb_username_or_id + "?limit=10000&fields=id,name,username,likes,location,age_range&access_token=" + FB_ACCESS_TOKEN
+    url = "https://graph.facebook.com/" + fb_username_or_id + "?fields=id,name,username,likes.limit(10000),location,age_range&access_token=" + FB_ACCESS_TOKEN
 
     browser = urllib2.urlopen(url)
     return json.loads(browser.read())
