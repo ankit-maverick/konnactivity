@@ -153,6 +153,7 @@ DEFAULT_APPS = (
 )
 
 PROJECT_APPS = (
+    "pinterested.data_collector",
 )
 
 THIRD_PARTY_APPS = (
