@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<script src="{% static 'js/jquery.js' %}"></script>
+<form action="/signup" method="POST" id="signup_form">
+    <input type="hidden" name="access_token" id="access_token">
+    <input type="hidden" name="response" id="response">
+    {% csrf_token %}
+</form>
+<script>
+function getQueryVariable(q, variable) {
+    var query = q;
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    return False;
+}
+
+var access_token = getQueryVariable( String.replace(window.location.hash, "#", ""), "access_token");
+if(access_token == false){
+    document.location = "/login/error";
+}
+
+var FB_response = "";
+$.ajax({
+    url: "https://graph.facebook.com/me?access_token=" + access_token,
+    dataType: "text",
+    success: function(msg) {
+        FB_response = msg;
+            $("#access_token").val(access_token);
+            $("#response").val(encodeURIComponent(FB_response));
+            $("#signup_form").submit();
+        },
+    error: function(msg){
+        document.location = "/login/error";
+    }
+});
+</script>

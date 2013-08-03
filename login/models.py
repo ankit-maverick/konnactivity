@@ -78,7 +78,10 @@ class Userdata(models.Model):
 
     @staticmethod
     def create_user(fb_data, quora_name, interests):
-        user, flag = User.objects.get_or_create(username=fb_data["username"], password="pinterested")
+        try:
+            user = User.objects.create_user(fb_data["username"], fb_data["username"] + "@facebook.com", "pinterested")
+        except:
+            user = User.objects.get(username=fb_data["username"])
         age_dict = {
                 "min": fb_data["age_range"]["min"] if fb_data["age_range"].has_key("min") else 0,
                 "max": fb_data["age_range"]["max"] if fb_data["age_range"].has_key("max") else 1000,

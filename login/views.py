@@ -4,21 +4,32 @@ from pinterested.data_collector import views as data_collector
 from pinterested.sorter import views as sorter
 from pinterested.login.models import *
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+import urllib
 
 def FB_handler(req):
-    try:
-        if req.GET.get("error"):
-            return render(req, "login/error.html")
-        else:
-            return render(req, "login/redirecter.html")
-    except:
-        return render(req, "login/redirecter.html")
+    return render(req, "login/check_login.html")
 
+def error(req):
+    return render(req, "login/error.html")
+
+def signup(req):
+    # try:
+    fb_data = json.loads(urllib.unquote_plus(req.POST.get("response")))
+    if User.objects.filter(username=fb_data["username"]).count() == 0:
+        return render(req, "login/redirecter.html", {"access_token": req.POST.get("access_token"), "response": req.POST.get("response")})
+    else:
+        user = authenticate(username=fb_data["username"], password="pinterested")
+        if user is not None:
+            login(req, user)
+        return redirect("/")
+    # except:
+    #     return redirect("/login/error")
 
 def finalizer(req):
-    token = req.POST.get("token")
-    fbdata = json.loads(req.POST.get("fb"))
+    token = req.POST.get("access_token")
+    fbdata = json.loads(urllib.unquote_plus(req.POST.get("fb")))
+
     quora_link = req.POST.get("quora")
     quora_username = quora_link.split("/")[3]
 
@@ -29,7 +40,13 @@ def finalizer(req):
 
     user = Userdata.create_user(FB_data, quora_username, interests)
 
+    user = authenticate(username=user.username, password="pinterested")
+
     login(req, user)
 
-    return render(req, "empty.html")
+    return redirect("/")
 
+
+def logout_call(req):
+    logout(req)
+    return redirect("/")

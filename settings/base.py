@@ -155,7 +155,8 @@ DEFAULT_APPS = (
 PROJECT_APPS = (
     "pinterested.data_collector",
     "pinterested.login",
-    "pinterested.sorter"
+    "pinterested.sorter",
+    "pinterested.home"
 )
 
 THIRD_PARTY_APPS = (
@@ -192,3 +193,5 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_URL = "/"

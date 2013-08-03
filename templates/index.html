@@ -1,6 +1,11 @@
 {% extends 'layouts/layout.html' %}
 {% load staticfiles %}
 {% block page_content %}
+{% if user.is_authenticated %}
+<script>
+    document.location = "/home";
+</script>
+{% else %}
 <div class="pure-g-r">
     <div class="pure-u-1-5">
         &nbsp;
@@ -12,4 +17,5 @@
         <a href="https://www.facebook.com/dialog/oauth?client_id=557603244304943&response_type=code%20token&scope=user_location,user_likes&redirect_uri=http://localhost:8000/login" target="_parent"><img src="{% static 'img/facebook_login_button.png' %}" alt="Login"></a>
     </div>
 </div>
+{% endif %}
 {% endblock %}
