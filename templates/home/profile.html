@@ -17,13 +17,15 @@
         <a href="http://www.quora.com/{{ userdata.quora_name }}" target="_blank"><img src="{% static 'img/quora_ico.png' %}" alt="Quora" style="height: 48px; width: auto;"></a>
     </div>
     <div class="pure-u-1-6">&nbsp;</div>
-    <div class="pure-u-1-6">&nbsp;</div>
     <div class="pure-u-1-4"><h2 style="font-weight: 100">Interests</h2>
     
     {% for i in userdata.interests.all %}
     <span class="interest-span">{{ i.interest }}</span>
     {% endfor %}
     </div>
+
+    
+    <div class="pure-u-1-6">&nbsp;</div>
 
     <script>
         $(".interest-span").each(function(){

@@ -3,11 +3,14 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from pinterested.login.models import *
 from pinterested.sorter import views as sorter
+from django.http import HttpResponse
+import json
 
 @login_required
 def home(req):
     user = req.user
     userdata = Userdata.objects.select_related().get(user=user)
+    all_interests = Interest.objects.order_by("interest").all()
 
     all_users = list(Userdata.objects.select_related().all())
     all_users.remove(userdata)
@@ -23,7 +26,8 @@ def home(req):
     return render(req, "home/home.html", {
         "user": user,
         "userdata": userdata,
-        "users": users
+        "users": users,
+        "all_interests": all_interests
     })
 
 
@@ -48,3 +52,35 @@ def user(req, user_id=None):
         "user": user,
         "userdata": userdata
     })
+
+@login_required
+def find(req):
+    active_userdata = Userdata.objects.select_related().get(user=req.user)
+    f1 = req.POST.get("field1")
+    f2 = req.POST.get("field2")
+    f3 = req.POST.get("field3")
+
+    users1 = list(Userdata.objects.select_related().filter(interests__interest=f1)) if f1 != "" else []
+    users2 = list(Userdata.objects.select_related().filter(interests__interest=f2)) if f1 != "" else []
+    users3 = list(Userdata.objects.select_related().filter(interests__interest=f3)) if f1 != "" else []
+
+    all_users = users1 + users2 + users3
+
+    if len(all_users) > 0:
+        users = []
+        frequency = []
+
+        for u in all_users:
+            if u == active_userdata:
+                continue
+            if u in users:
+                ind = users.index(u)
+                frequency[ind] += 1
+            else:
+                users.append(u)
+                frequency.append(1)
+
+        sorted_users = [x.small_widget() for (y,x) in sorted(zip(frequency,users), reverse=True)]
+        return HttpResponse(json.dumps({"results": sorted_users}), mimetype="application/json")
+    else:
+        return HttpResponse(json.dumps({"results": []}), mimetype="application/json")
