@@ -1,6 +1,7 @@
 {% extends 'layouts/layout.html' %}
 {% load staticfiles %}
 {% block page_content %}
+<script src="{% static 'js/jquery.js' %}"></script>
 <div class="pure-g-r" style="min-height: 600px;">
     <br>
     <div class="pure-u-1-12" >
@@ -15,8 +16,20 @@
         <a href="http://www.facebook.com/{{ user.username }}" target="_blank"><img src="{% static 'img/facebook_ico.png' %}" alt="Facebook" style="height: 48px; width: auto;"></a>
         <a href="http://www.quora.com/{{ userdata.quora_name }}" target="_blank"><img src="{% static 'img/quora_ico.png' %}" alt="Quora" style="height: 48px; width: auto;"></a>
     </div>
-    <div class="pure-u-1-4">&nbsp;</div>
     <div class="pure-u-1-6">&nbsp;</div>
     <div class="pure-u-1-6">&nbsp;</div>
+    <div class="pure-u-1-4"><h2 style="font-weight: 100">Interests</h2>
+    
+    {% for i in userdata.interests.all %}
+    <span class="interest-span">{{ i.interest }}</span>
+    {% endfor %}
+    </div>
+
+    <script>
+        $(".interest-span").each(function(){
+            $(this).css({padding: Math.round(Math.random()*10 + 2) + "px", fontSize: Math.round(Math.random()*24 + 10) + "px"})
+        });
+    </script>
+    
 </div>
 {% endblock %}

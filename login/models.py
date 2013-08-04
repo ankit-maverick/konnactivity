@@ -63,6 +63,8 @@ class Userdata(models.Model):
     name = models.CharField(max_length=255)
     quora_name = models.CharField(max_length=255)
 
+    ansyahoo = models.CharField(max_length=255)
+
     CHOICES = (
         (True, "Male"),
         (False, "Female")
@@ -76,8 +78,14 @@ class Userdata(models.Model):
     created_at          = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at          = models.DateTimeField(auto_now=True, editable=False)
 
+    def widget(self):
+        import random
+        a = [i.interest for i in self.interests.all()[:2]]
+        random_likes = ", ".join(a[:2])
+        return '<br><div class="pure-g-r" style="background: #ededed; min-height: 112px"><div class="pure-u-1" style="margin: 4px"><div class="pure-u-1-3"><img src="https://graph.facebook.com/' + self.user.username +'/picture?type=normal" alt=""></div><div class="pure-u-1-2"><br><a href="user/' + str(self.id) + '">' + self.name + '</a><br><small>' + self.city.city + '<br></small>likes ' + random_likes + '</div></div></div>'
+
     @staticmethod
-    def create_user(fb_data, quora_name, interests):
+    def create_user(fb_data, quora_name, yahoo, interests):
         try:
             user = User.objects.create_user(fb_data["username"], fb_data["username"] + "@facebook.com", "pinterested")
         except:
@@ -92,6 +100,7 @@ class Userdata(models.Model):
             "quora_name": quora_name,
             "gender": True if fb_data["gender"] is "male" else "Female",
             "city": City.objects.get_or_create(city=fb_data["location"]["name"])[0],
+            "ansyahoo": yahoo,
             "age": AgeRange.get_or_add(**age_dict)[0]
         }
 

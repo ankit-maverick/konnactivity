@@ -3,9 +3,12 @@
 <div class="pure-g-r">
     <div class="pure-u-1-5">&nbsp;</div>
     <div class="pure-u-3-5" style="text-align: center">
-        <h1 style="font-weight: 100">Please enter your Quora profile link</h1>
+        
         <br><br>
         <form action="/finalize" method="POST"  class="pure-form">
+            <h1 style="font-weight: 100">Please enter your Yahoo Answers profile link</h1>
+            <input type="url" class="pure-input-1-2" id="ansyahoo" name="ansyahoo" required >
+            <h1 style="font-weight: 100">Please enter your Quora profile link</h1>
             <input type="url" class="pure-input-1-2" id="quora" name="quora" required pattern="^http[s]?://www.quora.com/[a-zA-Z0-9-]+" title="Quora Profile Link">
             <input type="hidden" name="fb" value='{{ response }}'>
             <input type="hidden" name="access_token" value="{{ access_token }}">

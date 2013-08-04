@@ -49,3 +49,11 @@ def FBParser(fb_username_or_id, access_token):
 
     browser = urllib2.urlopen(url)
     return json.loads(browser.read())
+
+def YahooParser(yahoo_link):
+    username = yahoo_link.split("show=")[1].split("&")[0]
+
+    link = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20answers.getbyuser%20where%20user_id%3D%22" + username + "%22&format=json&diagnostics=true&callback=cbfunc"
+
+    browser = urllib2.urlopen(link)
+    return json.loads(browser.read()[7:-2])

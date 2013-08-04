@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     # url(r'^pinterested/', include('pinterested.foo.urls')),
     # 
     url(r'^profile/?$', home_views.profile),
+    url(r'^home/?$', home_views.home),
+    url(r'^user/(\d*)/?$', home_views.user),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
